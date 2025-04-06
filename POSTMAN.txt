@@ -42,11 +42,294 @@ Consumed between one or more organizations that have an established relationship
 The API we will use in this course will be a Public, REST, Web API 👀.
 
 
+Postman has a vision for an API First World - one where 100 million developers are connected through APIs, and APIs take center stage as primary building blocks. In the API-first world:
+
+APIs are considered a #1 priority
+APIs are easily consumable
+APIs are easily discoverable
 
 
 
 
 
+ Set the request method to GET, and the request URL to GET https://library-api.postmanlabs.com/books
+ View the response
+If everything goes well, you will see a response from the server in the lower half of Postman.
+
+It should look like this: a JSON (JavaScript Object Notation) response body with an array of book objects. You can scroll down to see more books.
+When we make an HTTP call to a server, we specify a request method that indicates the type of operation we are about to perform. These are also called HTTP verbs.
+
+Some common HTTP request methods correspond to the CRUD operations mentioned earlier. You can see a list of more methods here.
+
+Method name	Operation
+GET	Retrieve data (Read)
+POST	Send data (Create)
+PUT/PATCH	Update data (Update)
+
+* PUT usually replaces an entire resource, whereas PATCH usually is for partial updates
+DELETE	Delete data (Delete)
+Since we are "getting" books and not modifying any data, it makes sense that we are making a GET request. 
+
+These are just conventions - it all depends on how the API is coded. To know which method to use, always read the documentation for the API you're working with!
 
 
 
+In addition to a request method, a request must include a request URL that indicates where to make the API call. A request URL has three parts: a protocol (such as http:// or https://), host (location of the server), and path (route on the server). In REST APIs, the path often points to a reference entity, like "books".
+
+Protocol	Host	Path
+https://	library-api.postmanlabs.com	/books
+Paths and complete URLs are also sometimes called API endpoints.
+
+Response status codes
+The Postman Library API v2 has returned a response status code of "200 OK". Status codes are indicators of whether a request failed or succeeded.
+
+Status codes have conventions. For example, any status code starting with a "2xx" (a "200-level response") represents a successful call. Get familiar with other status code categories:
+
+Code range	Meaning	Example
+2xx	Success	200 - OK
+201 - Created
+204 - No content (silent OK)
+3xx	Redirection	301 - Moved (path changed)
+
+4xx	Client error	400 - Bad request
+401 - Unauthorized
+403 - Not Permitted
+404 - Not Found
+5xx	Server error	500 - Internal server error
+502 - Bad gateway
+504 - Gateway timeout
+
+Request-Response pattern
+Now you can understand the request response pattern, which represents how computers communicate over a network. An API is the interface that lets us know what kind of response to expect when we make certain calls to a server. 
+
+You made an HTTP GET request to https://library-api.postmanlabs.com/books and received a response from the server.
+
+Diagram of the request-response pattern. A client makes a request over a network to hit a server, which interprets the request, processes it, and sends back a response over the network
+
+The client is the agent making a request. A client could be a browser or an application you have coded, for example. In our case Postman is the client because that's how we sent the request. 
+
+The request is sent over a network to some server. In our case, we made a request over the public internet to a server located at the address https://library-api.postmanlabs.com. 
+
+The server interpreted the request (GET /books) and sent the appropriate response over the network back to the Postman client: a list of books.
+
+That's it!
+
+
+
+
+
+Variables in Postman
+Postman allows you to save values as variables to reuse them and easily hide sensitive information like API Keys. 
+
+We will use a variable to replace our base URL so that we don't have to type that repeatedly. Once a variable is defined, you can access its value using double curly brace syntax like this: {{variableName}}
+
+Set the "baseUrl" variable
+In Postman, you can quickly create a variable by selecting text. Below the video is a step-by-step breakdown of how to set your variable.
+
+Go to the "get books" request in your collection.
+With your cursor, select the entire base URL of the API (https://library-api.postmanlabs.com). Do not include the slash / after .com.
+
+Click "Set as variable" to save the base URL to a variable.
+
+ Click "Set as a new variable".
+
+ Name your new variable "baseUrl" and select "Collection" as the scope, then click Set variable.
+
+ Now that the variable is set, you can access the value anywhere in your collection by typing {{baseUrl}}
+
+Hover over {{baseUrl}}. You will see its current value is set to https://library-api.postmanlabs.com
+
+Please save and send the request; it will work exactly like before! You should get a status 200 OK response with a list of books.
+
+Where are my variables?
+You can find Collection variables in your collection.
+
+Click on your collection, then the Variables tab. Here you can view and edit your variables.
+
+Initial Value - the value initially set when someone forks or imports your collection. Note that if you share your collection with others, they will see this value, so don't put any secrets here!
+
+Current Value - Postman always resolves the variable to this value. This is local to your Postman account, and not public. It is good to keep secrets like API Keys ONLY in this column and not include them in the Initial Value column.
+
+ 
+
+// QUERY PARAMETERS
+Query parameters
+Remember that the minimum ingredients you need to make a request are:
+
+a request method (GET/POST/PUT/PATCH/DELETE, etc)
+a request URL
+Some APIs allow you to refine your request further with key-value pairs called query parameters. 
+
+Query parameter syntax
+Query parameters are added to the end of the path. They start with a question mark ?, followed by the key-value pairs in the format: <key>=<value>. For example, this request might fetch all photos that have landscape orientation:
+
+GET https://some-api.com/photos?orientation=landscape
+
+If there are multiple query parameters, each is separated by an ampersand &. Below two query parameters to specify the orientation and size of the photos to be returned:
+
+GET https://some-api.com/photos?orientation=landscape&size=500x400
+
+Search Google - with query parameters!
+Try pasting this URL into your browser or as a GET request in Postman to make a Google search for "Postman". (If you use Postman, click the "Preview" tab in the response to view the rendered HTML!)
+
+https://www.google.com/search?q=postman
+
+This request adds a search term as a query parameter q=postman ("q" refers to "query" here) to the GET /search path on Google's server.
+
+Because this parameter is in our request, the server returns an HTML document that is a search results page with hits for "Postman". The search bar is pre-populated with our query "Postman".
+
+When to use query parameters?
+The answer is always: read the API documentation!
+
+Sometimes, query parameters are optional and allow you to add filters or extra data to your responses. Sometimes, they are required in order for the server to process your request. APIs are implemented differently to fulfill different needs. 
+
+The Postman Library API v2 allows you to add optional query parameters on requests to GET /books filter the books that come back in response. Let's try it out next!
+
+
+
+Another way of passing request data to an API is via path variables (a.k.a. "path parameters"). A path variable is a dynamic section of a path and is often used for IDs and entity names such as usernames. 
+
+Path Variable syntax
+The path variable comes immediately after a slash in the path. For example, the GitHub API allows you to search for GitHub users by providing a username in the path in place of {username} below: 
+
+GET https://api.github.com/users/{username}
+
+Making this API call with a value for {username} will fetch data about that user:
+
+GET https://api.github.com/users/postmanlabs
+
+You can have multiple path variables in a single request, such as this endpoint for getting a user's GitHub code repository:
+
+GET https://api.github.com/repos/{owner}/{repoName}
+
+For example, to get information about the newman code repository from postmanlabs:
+
+GET https://api.github.com/repos/postmanlabs/newman
+
+Path vs. query parameters
+At first, it is easy to confuse these two parameter types. Let's compare them side by side. 
+
+Path Variable	Query parameters
+ex: /books/abc123	ex: /books?search=borges&checkedOut=false
+Located directly after a slash in the path. It can be anywhere on the path	Located only at the end of a path, right after a question mark ?
+Accepts dynamic values	Accepts defined query keys with potentially dynamic values.
+* Often used for IDs or entity names	* Often used for options and filters
+* These are just conventions! Some APIs might ask you to pass an ID or username in a query parameter like this: /users?username=getpostman
+
+When to use path variable?
+Always read the API documentation! If a path parameter is required, the documentation will mention this.
+
+Note that some API documentation uses colon syntax to represent a wildcard in the path like /users/:username, while some use curly braces like /users/{username}. They both mean the same thing: that part of the path is dynamic!
+
+ Hover over your Postman Library API v2 Collection, click the three dots icon and select Add request. Name your new request "add book" 
+
+ Set the request method to POST and the request URL to 
+{{baseUrl}}/books
+ This endpoint requires adding a body to our request to send a payload. Our payload will be a JSON object containing the information about the book we are adding.
+
+Click the Body tab of the request and select that data type raw > JSON
+
+Think of a book you love or have read recently.
+
+Inside the Body editor, add a JSON object with details about the new book's title, author, genre and yearPublished.
+
+You can copy this object and replace the values with details about your book!
+{
+  "title": "To Kill a Mockingbird",
+  "author": "Harper Lee",
+  "genre": "fiction",
+  "yearPublished": 1960
+}
+ Save and Send your request.
+ 
+😱 Uh-oh!
+The response from the server came back with a status 401 Unauthorized. Remember that 400-level errors are client errors, meaning we made a mistake in our request. 
+
+
+The body of the response has a message explaining we need to add an api-key to the headers of the request.
+
+Let's fix this error in our next lesson.
+
+
+Task: Add an authorization header
+Some APIs require Authorization (aka Auth) for certain endpoints in order to permit a request.
+
+Authorization
+Think about why you might not want an API to have completely open endpoints that anyone can access publicly. It would allow unauthorized people to access data they shouldn't see, or allow bots to flood an API with thousands of calls per second and shut it down. 
+
+There are multiple methods for authorizing a request. Some examples are Basic Auth (username and password), OAuth (delegated authorization), and API Keys (secret strings registered to a developer from an API portal). 
+
+Getting an API Key
+APIs that use API Key auth usually allow developers to sign up in a developer portal, where they will receive a random API Key that can be used to authorize their requests to the API. The API Key allows the API to track who is making calls and how often.  
+
+The Postman Library API v2 uses very light protection and does not require you to register for an API Key. You simply have to know it:
+
+Header name: api-key
+Header value: postmanrulz
+
+As the documentation shows, the Postman Library API v2 requires adding this header to any requests for adding, updating and deleting books, since these operations change data in the database instead of simply reading them.
+
+Headers
+Headers are how we can add metadata about our requests, such as authorization information or specify the data type we want to receive in a response. This is different than the actual payload data we send in the body of a request, such as our new book information.
+
+You can think of headers like the outside of an envelope when you send a letter. The envelope has information about delivering the letter, like proof that you've paid for postage. The actual data "payload" is the letter inside the envelope.
+
+Illustration of Postmanaut delivering a letter on a space bike
+
+ 
+Add the API Key to the request header
+
+ 
+
+On your "add a book" request, click the Headers tab
+In the Headers helper table, add the key api-key with a value of postmanrulz
+ Save and Send your request. 
+🚀 Success!
+Your book was added! Now that your request is properly authorized in the header, you should get a 201 Created response with a response body that is an object representing your newly added book!
+
+Your new book has been assigned a random, unique id, and has extra information now, such as it's checkedOut status and when it was added to the library (createdAt)
+
+(optional) View your new book
+You can now return to your "get books by id" request, and in the path parameter id replace it with the value of the id you received in the body of the book you added.
+
+
+
+Anyone can now see your book when they fetch books!
+
+But wait, it gets easier...
+There is an easier way to add Auth in Postman... let's find out next 👀
+
+
+Task: Use Postman Auth instead!
+Postman has an Auth helper that makes authorizing requests even easier!
+
+Delete the api-key header
+Before we use the Postman Auth helper, let's remove the hard-coded header we just added on the "add a book" request.
+
+Hover over the api-key header in the Headers tab and click the "x" icon at the right to delete the header. Save your request.
+
+Add Auth to the Collection
+The Postman Auth helper can help you add authorization at the request, folder or collection level. Let's add the api-key to our entire collection so that all requests will send the key. 
+
+
+ 
+
+Click on your collection "Postman Library API v2" and select the Authorization (or Auth) tab
+
+Select API Key as the auth Type
+
+Enter the API Key details in the fields below. Key: api-key, Value: postmanrulz, Add to: Header
+
+Save the changes to your collection by clicking the floppy disk icon in the upper right (important!)
+All requests inside this collection that use the auth method "Inherit from parent" will have this header attached, and therefore be authorized.
+
+Add a new book
+Go back to your "add a book" request and add another book by changing the body in the Body tab
+
+Ensure the Auth method in the Authorization tab of your request is set to "Inherit from parent" to use the API Key we set at the collection level. This is the default behavior for requests.
+
+
+
+Save your request and hit Send!
+
+You can send the "get books by id" request again to see your new book with the new id
