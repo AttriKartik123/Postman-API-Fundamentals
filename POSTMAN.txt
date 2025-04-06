@@ -483,3 +483,44 @@ Save and send your request.
 
 When the 201 the response comes back from the API with your newly created book, and the test script will run and save the book's id as a collection variable automatically.
 
+
+
+
+Task: Checkout your book
+Someone wants to check out the book you just added!
+
+As a librarian, you will update the library database via the API to mark the book's checkedOut status from false to true.
+
+The API documentation shows we can update a book by id by making a request (authorized with the API Key) with the updated information to:
+
+PATCH https://library-api.postmanlabs.com/books/:id
+
+Make a request to update the book
+
+ 
+
+Hover on your Postman Library API v2 collection, click the three dots, and select Add request. Name your new request "checkout a book"
+
+Set the request method to PATCH
+
+Set the request URL to {{baseUrl}}/books/:id 
+
+Set the value of the path variable id to {{id}}.
+
+This will use the value of our collection variable named id that was set in the Test script of the"add a book" request. You can see the value by hovering on your id variable.
+
+Postman screenshot: Set the path variable named id to be the value of the collection variable named id
+
+Add a raw JSON body in the Body tab to update the checkedOut property to true: 
+
+{ 
+  "checkedOut": true 
+}
+Save and Send your request
+Note: This request requires Authorization, which is automatically added as we added the collection level auth. The request is set to "Inherit from parent", this will use the API Key set at the collection level on our PATCH request. 
+You should get a 200 OK response that shows the updated data about your book. Notice how checkedOut is now true
+
+checkedOut: true
+
+Your book is updated!
+Now, if you return to your "get book by id" request, update the id path variable value to {{id}} Save and Send, you will see the same updated data!
