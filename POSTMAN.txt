@@ -333,3 +333,153 @@ Ensure the Auth method in the Authorization tab of your request is set to "Inher
 Save your request and hit Send!
 
 You can send the "get books by id" request again to see your new book with the new id
+
+
+variables in postman (Continued)
+Previously in the "Request Parameters" section of this course, we saw how using a variable saved us time and helped reduce redundant copy-paste of the request URL using the double curly brace syntax like this: {{variableName}}.
+
+Remember, Postman allows you to save values as variables so that you can:  
+
+Reuse values to keep your work DRY (Don’t Repeat Yourself)
+
+Hide sensitive values like API keys from being shared publicly
+In this section, we will learn more about variables and introduce better practices that enable us to make dynamic requests. 
+
+Variable scopes
+You can set variables that live at various scopes. Postman will resolve to the value at the nearest and narrowest scope.
+
+From broadest to narrowest, these scopes are global, collection, environment, data, and local.
+
+Variable scope
+
+If a variable with the same name is declared in two different scopes, the value stored in the variable with narrowest scope will be used. For example, if there is a global variable named username and a local variable named username, the local value will be used when the request runs.
+
+We will work with collection variables today, which live at the collection level and can be accessed anywhere inside the collection.
+
+In the next section, you will learn how to set a variable via scripting.
+
+LOCAL- DATA - ENVIRONMENT - COLLECTION - GLOBAL variable  ------> GLobal scopes
+
+
+Scripting in Postman
+Postman allows you to add automation and dynamic behaviors to your collections with scripting.
+
+Postman will automatically execute any provided scripts during two events in the request flow:
+
+Immediately before a request is sent: pre-request script (Pre-request Script of Scripts tab).
+Immediately after a response comes back: post-response script (Post-response of Scripts tab).
+In this lesson, we will focus on writing scripts in the Post-response tab, which are executed when a response comes back from an API.
+
+The pm object
+Postman has a helper object named pm that gives you access to data about your Postman environment, requests, responses, variables and testing utilities. 
+
+For example, you can access the JSON response body from an API with: 
+
+pm.response.json()
+
+You can also programmatically get collection variables like the value of baseUrl with:
+
+pm.collectionVariables.get(“baseUrl”)
+
+In addition to getting variables, you can also set them with pm.collectionVariables.set("variableName", "variableValue") like this:
+
+pm.collectionVariables.set(“myVar”, “foo”)
+
+Get ready!
+In the next task, we will use scripting and the pm object to set a new book's automatically id as a collection variable so we can use the id in other requests.
+
+
+
+
+
+
+Task: Your first script
+If you are new to JavaScript - have no fear! Here are some basics.
+
+Logging data 
+In JavaScript, you can print data for a value to the console using this syntax:
+
+console.log("Hello world!")
+// => Hello world!
+Comments
+In JavaScript you can add comments to your code. Comments are skipped by the interpreter, so you can use them to explain things in your code if you like. 
+
+// Single line comments start with two slashes. I am not code!
+
+/* You can write multi-line comments by 
+opening and closing with slash and asterisk. 
+I am not code!
+*/
+
+Add a script to your request
+
+ 
+
+In your "add a book" request, change the book data in your Body to a new book you like.
+
+From the Scripts tab of your request, open the Post-res tab (short for Post-response)
+
+Inside the Script editor, add this JavaScript code to log the JSON response from the API:
+console.log(pm.response.json())
+Save your request
+
+Send your request. This will trigger the script in the Post-response script tab to run after the response comes back from the API
+
+Open the Postman Console in the lower left of the window.
+
+
+ Scroll to the bottom of the logs in the console. You will see your most recent request POST https://library-api.postmanlabs.com/books
+
+console
+The response data from the API is logged in the console because of the code in our Scripts tab! You can expand the data by clicking on the small arrow to the left
+
+expanded console object
+Congratulations!
+You've written your first script. Next, you'll learn how to grab the automatically id of your new book and save it as a collection variable.... using code!
+
+ 
+
+
+ Task: Grab the new book id
+Combining the power of variables and scripting gives you superpowers! Let's explore how you can automatically set a value for a variable via scripting.
+
+Saving a value as a variable allows you to use it in other requests. Using a Post-response script, let's grab the id of a newly added book and save it so we can use it in future requests.
+
+Setting and getting collection variables
+The pm object allows you to set and get collection variables.
+
+To set a collection variable, use the .set() method with two parameters: the variable name and the variable value
+
+pm.collectionVariables.set("variableName", value)
+
+To get a collection variable use the .get() method and specify the name of the variable you want to retrieve:
+
+pm.collectionVariables.get("variableName")
+
+Local variables
+We can also store local variables inside our scripts using JavaScript. 
+
+There are two ways to define a variable in JavaScript: using the const or let keywords. const is for variables that won't change value, whereas let allows you to reassign the value later.
+
+Set the new book id as a variable 
+
+ 
+
+In the Body tab of the "add a book" request, change the book's details to add a new book!
+
+In the Post-response tab in Scripts of the "add a book" request, replace the console.log() statement with this code:
+
+// save the "id" value from the response to a variable named "id"
+const id = pm.response.json().id
+// save the id as a collection variable named "id"
+pm.collectionVariables.set("id", id)
+The comments above that start with // help explain what the code is doing, and are ignored when we run the script. 
+
+Note: If there is no Collection variable named "id" Postman will create a new variable named id and assign the value.
+
+post-request script
+
+Save and send your request.
+
+When the 201 the response comes back from the API with your newly created book, and the test script will run and save the book's id as a collection variable automatically.
+
